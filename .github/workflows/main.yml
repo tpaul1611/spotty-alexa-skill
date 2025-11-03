@@ -1,0 +1,107 @@
+name: Deploy Lambda Function
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'lambda/**'
+      - '.github/workflows/main.yml'
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  LAYER_NAME: spotty-alexa-requirements-layer
+
+jobs:
+  layer:
+    name: Build Lambda Layer
+    environment: prod
+    runs-on: ubuntu-24.04-arm
+    if: contains(github.event.head_commit.modified, 'lambda/requirements.txt')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Install dependencies
+        run: |
+          mkdir -p python
+          pip install \
+            -r lambda/requirements.txt \
+            -t python \
+            --only-binary=:all: \
+            --no-cache-dir \
+            --platform manylinux2014_aarch64 \
+            --implementation cp \
+            --python-version 313
+      
+      - name: Cleanup ask_sdk_model docstrings
+        run: |
+          find python/ask_sdk_model -type f -name '*.py' -exec sed -i 's/\\&//g' {} +
+
+      - name: Zip Lambda Layer
+        run: |
+          zip -r9 layer.zip python/      
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v5.1.0
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions-tpaul1611
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Upload Lambda Layer
+        run: |
+          aws lambda publish-layer-version \
+            --layer-name $LAYER_NAME \
+            --zip-file fileb://layer.zip \
+            --compatible-runtimes python3.13 \
+            --region ${{ vars.AWS_REGION }}
+
+  deploy:
+    needs: layer
+    if: always()
+    name: Lambda Deploy
+    environment: prod
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+      
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v5.1.0
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions-tpaul1611
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Get Latest Layer Version ARN
+        id: layer
+        run: |
+          LAYER_VERSION_ARN=$(aws lambda list-layer-versions \
+            --layer-name $LAYER_NAME \
+            --query 'LayerVersions[0].LayerVersionArn' \
+            --output text \
+            --region ${{ vars.AWS_REGION }})
+          echo "layer_version_arn=$LAYER_VERSION_ARN" >> $GITHUB_OUTPUT
+
+      - name: AWS Lambda Deploy Action
+        uses: aws-actions/aws-lambda-deploy@v1.1.0
+        with:
+          function-name: spotty-prod-alexa-skill
+          package-type: Zip
+          code-artifacts-dir: lambda
+          handler: lambda_function.lambda_handler
+          runtime: python3.13
+          architectures: arm64
+          memory-size: 256
+          timeout: 3
+          publish: true
+          layers: >
+            [
+              "${{ steps.layer.outputs.layer_version_arn }}"
+            ]
+          environment: >
+            {
+              "SPOTTY_API_KEY": "${{ secrets.SPOTTY_API_KEY }}"
+            }

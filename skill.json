@@ -1,0 +1,50 @@
+{
+  "manifest": {
+    "publishingInformation": {
+      "locales": {
+        "de-DE": {
+          "summary": "Zusammenfassungen und Details zum heutigen und morgigen Strompreis bei Spotty.",
+          "examplePhrases": [
+            "Alexa, starte Spotty",
+            "Alexa, frag Spotty wie heute der Strompreis ist",
+            "Alexa, frag Spotty wann morgen die 3 billigsten stunden sind"
+          ],
+          "keywords": [
+            "strom",
+            "strompreis",
+            "spotty"
+          ],
+          "name": "Strompreis Österreich",
+          "description": "Dieser Skill gibt Zusammenfassungen oder Details zum Strompreis an oder Strombörse in Österreich. Man kann allgemein nach dem Preis fragen um eine Zusammenfassung ähnlich einem Wetterbericht zu erhalten, oder man fragt wann der Strom für X Stunden am billigsten sein wird um einen konkreten Zeitraum mit Durchschnittpreis genannt zu bekommen.",
+          "smallIconUri": "file://assets/images/de-DE_smallIconUri.png",
+          "largeIconUri": "file://assets/images/de-DE_largeIconUri.png"
+        }
+      },
+      "automaticDistribution": {
+        "isActive": false
+      },
+      "isAvailableWorldwide": false,
+      "testingInstructions": "{\"ask_dist_username\":\"\",\"ask_dist_password\":\"\",\"ask_dist_testing_instructions\":\"\"}",
+      "category": "NEWS",
+      "distributionMode": "PUBLIC",
+      "distributionCountries": [
+        "AT"
+      ]
+    },
+    "manifestVersion": "1.0",
+    "privacyAndCompliance": {
+      "allowsPurchases": false,
+      "locales": {
+        "de-DE": {}
+      },
+      "containsAds": false,
+      "isExportCompliant": true,
+      "isChildDirected": false,
+      "shoppingKit": {
+        "isShoppingActionsEnabled": false,
+        "isAmazonAssociatesOnAlexaEnabled": false
+      },
+      "usesPersonalInfo": false
+    }
+  }
+}
