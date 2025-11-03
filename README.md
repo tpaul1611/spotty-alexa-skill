@@ -1,2 +1,2 @@
-# -spotty-alexa-skill
+# spotty-alexa-skill
 Alexa Skill for spottyenergie.at
