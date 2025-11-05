@@ -31,7 +31,7 @@ class LaunchRequestHandler(AbstractRequestHandler):
         return ask_utils.is_request_type("LaunchRequest")(handler_input)
 
     def handle(self, handler_input):
-        speak_output = "Willkommen beim Stromradar, du kannst mich nach dem Strompreis fragen."
+        speak_output = "Willkommen bei Spotty, du kannst mich nach dem Strompreis fragen."
 
         return (
             handler_input.response_builder

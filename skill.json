@@ -15,7 +15,7 @@
             "spotty"
           ],
           "name": "Strompreis Österreich",
-          "description": "Dieser Skill gibt Zusammenfassungen oder Details zum Strompreis an oder Strombörse in Österreich. Man kann allgemein nach dem Preis fragen um eine Zusammenfassung ähnlich einem Wetterbericht zu erhalten, oder man fragt wann der Strom für X Stunden am billigsten sein wird um einen konkreten Zeitraum mit Durchschnittpreis genannt zu bekommen.",
+          "description": "Dieser Skill gibt Zusammenfassungen oder Details zum Strompreis an der Strombörse in Österreich. Man kann allgemein nach dem Preis fragen um eine Zusammenfassung ähnlich einem Wetterbericht zu erhalten, oder man fragt wann der Strom für X Stunden am billigsten sein wird um einen konkreten Zeitraum mit Durchschnittpreis genannt zu bekommen.",
           "smallIconUri": "file://assets/images/de-DE_smallIconUri.png",
           "largeIconUri": "file://assets/images/de-DE_largeIconUri.png"
         }
